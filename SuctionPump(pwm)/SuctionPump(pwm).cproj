@@ -129,6 +129,9 @@
     <Compile Include="I2C_0_AVR128DA64.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="icons_and_numerics.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>

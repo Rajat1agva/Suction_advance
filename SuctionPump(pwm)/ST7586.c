@@ -4,8 +4,9 @@
  * Created: 10.09.2018 10:59:00
  *  Author: gfcwfzkm
  */ 
-
-#include "ST7586.h"
+// #ifndef ST7586_c_
+// #define ST7586_C_
+ #include "ST7586.h"
 
 uint16_t display_vop = 0x00f5;
 
@@ -441,3 +442,5 @@ void ST7586_memset(uint8_t *array, char c, char arSize)
 		array[i] = c;
 	}
 }
+
+/*#endif*/
