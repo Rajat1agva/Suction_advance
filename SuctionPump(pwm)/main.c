@@ -15,12 +15,13 @@
 #include "Ams5812_i2c.h"
 #include "I2C_0_AVR128DA64.h"
 #include "ADC_AVR128DA64.h"
- #include "ST7586.h"
-
+#include "ST7586.h"
+#include "bool_numerics.h"
 #include "icons_and_numerics.h"
 
 int  dutyCycle1  = 1500;			// MAX Value	3000
 int  dutyCycle2	 = 1000;			// MAX Value	
+float	final_pressure = 0; 
 uint8_t pre_def[3] = {192, 24, 3}, inv_def[3] = {27,195,216}; 
 void TCA0_PWM_init(void);
 void PWM_Condition1(void);
@@ -41,6 +42,8 @@ int main(void)
 	SPI_0_init();
 	ST7586_init(1);
 	_print_icon(25,25,32,low_battery_15x32,15,32);
+	
+	//ST7586_fill(ST7586_COLOR_BLACK);
 	while (1)
 	{   uint8_t i = 200;
 		float pressure = 0.0;
@@ -51,7 +54,7 @@ int main(void)
 			_delay_us(1000);
 			i--;
 		}
-	float	final_pressure = ((pressure/200)*51.7149); //final pressure in mmHg
+	final_pressure = ((pressure/200)*51.7149); //final pressure in mmHg
 	USART1_sendFloat(final_pressure,2);
 	
 	int count = 0;
@@ -59,7 +62,7 @@ int main(void)
 	
 	dutyCycle1 = 0.3663004*count + 1500;
 	TCA0.SINGLE.CMP0 = dutyCycle1;
-		
+	show_mmgh_3digit(150,80);	
 	}
 }
 
@@ -157,4 +160,87 @@ void _print_icon(int x1, int y1, int x2, uint8_t *font, uint8_t height , uint8_t
 		__set_pixel(x1, (_length+y1), x2, 1, &_buff[0], buff_length);
 		i=0;
 	}
+}
+
+void show_mmgh_3digit (int x, int y)
+{
+	int buff =(int)final_pressure;
+	uint8_t digit = 0, digit_a = 0, digit_b = 0, digit_c = 0;
+	if (buff > 999)
+	{
+		USART1_sendString("pressure digit overflow!!");
+		final_pressure = 0;
+	}
+	digit_c = buff%10;
+	buff = buff/ 10;
+	digit_b = buff%10;
+	digit_a = buff/10;
+	buff = 0;
+	print_bool(x, y, digit_a);
+	print_bool(x+27, y, digit_b);
+	print_bool(x+54, y, digit_c);
+	
+}
+void print_bool(int x, int y, int n)
+{
+	uint8_t height = 36, width = 24;
+	int new_pos = 0;
+	bool array_data = false;
+	uint8_t i = 0, k = 0;
+
+	for(int _length = 0; _length < height; _length++)
+	{
+		// 			USART1_sendString("length");
+		// 			USART1_sendInt(_length);
+		uint8_t _buff[8] = {0};
+		for(int _width = 0; _width < width; _width++)
+		{
+			// 				USART1_sendString("width");
+			// 				USART1_sendInt(_width);
+			// 				USART1_sendString("pos");
+			// 				USART1_sendInt(new_pos);
+			
+			array_data = pgm_read_byte(&(system24x36[n][new_pos]));
+			new_pos++;
+			// 				USART1_sendString("data");
+			// 				USART1_sendInt(array_data);
+			if (array_data)
+			{
+				_buff[i] = _buff[i] | pre_def[k];
+				// 					USART1_sendString("buff");
+				// 					USART1_sendInt(_buff[i]);
+			}
+			if(++k > 2)
+			{
+				k = 0;
+				i++;
+			}
+
+		}
+		
+		_set_pixel(x, (_length+y) , 1, &_buff[0], 8);
+		i=0;
+	}
+
+}
+void _set_pixel (int x, int y, bool color, uint8_t _data[], int array_length)
+{
+	uint8_t tempArgs[4];
+	//uint8_t _data[3] = {0xC0, 0xF2, 0xDC};
+	ST7586_cmd(SETCOLUMNADDRESS);	// Set Column Address
+	// Stupid display addressing. Why requiring two bytes, when the max value is 127 for columns / 160 for rows???
+	tempArgs[0] = 0;
+	tempArgs[1] = x/3;
+	tempArgs[2] = 0;
+	tempArgs[3] = 128;
+	ST7586_send_data(tempArgs, 4);
+	ST7586_cmd(SETROWADDRESS);		// Set Row Address
+	tempArgs[0] = 0;
+	tempArgs[1] = y;
+	tempArgs[2] = 0;
+	tempArgs[3] = 159;
+	ST7586_send_data(tempArgs, 4);
+	ST7586_cmd(WRITEDISPLAYDATA);
+	ST7586_send_data(_data, array_length);
+	//	USART1_sendString("set pixel");
 }

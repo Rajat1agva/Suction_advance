@@ -126,6 +126,9 @@
     <Compile Include="Ams5812_i2c.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="bool_numerics.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="I2C_0_AVR128DA64.h">
       <SubType>compile</SubType>
     </Compile>
@@ -138,10 +141,10 @@
     <Compile Include="SPI_0_AVR128DA64.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="ST7586.c">
+    <Compile Include="ST7586.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="ST7586.h">
+    <Compile Include="System_22x32.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="UART_1_AVR128DA64.h">
