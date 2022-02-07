@@ -5,15 +5,17 @@
  * Author : AGVA
  */ 
 
-#define F_CPU							(24000000UL)
+#define F_CPU							24000000UL
 
 #include <avr/io.h>
 #include <util/delay.h>
 #include "avr/xmega.h"
+#include "UART_1_AVR128DA64.h"
+#include "SPI_0_AVR128DA64.h"
 #include "Ams5812_i2c.h"
-#include "UART_1_AVR128DA64 (1).h"
 #include "I2C_0_AVR128DA64.h"
 #include "ADC_AVR128DA64.h"
+#include "ST7586.h"
 
 int  dutyCycle1  = 1500;			// MAX Value	3000
 int  dutyCycle2	 = 1000;			// MAX Value	
@@ -41,10 +43,10 @@ int main(void)
 		}
 	float	final_pressure = ((pressure/200)*51.7149); //final pressure in mmHg
 	USART1_sendFloat(final_pressure,2);
-	USART1_sendString("voltage");
+	
 	int count = 0;
 	count = ADC0_read(channel_1);
-	USART1_sendInt(count);
+	
 	dutyCycle1 = 0.3663004*count + 1500;
 	TCA0.SINGLE.CMP0 = dutyCycle1;
 		

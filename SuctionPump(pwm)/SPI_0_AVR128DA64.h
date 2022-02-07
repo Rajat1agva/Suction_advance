@@ -1,9 +1,16 @@
 #ifndef SPI_0_AVR128DA64_H_
 #define SPI_0_AVR128DA64_H_
 
+//#include "UART_1_AVR128DA64.h"
+
 #define SlaveSelectDIR (PORTA_DIR |= (1 << 7))
 #define SlaveSelectEnable (PORTA_OUT &= ~(1 << 7))
 #define SlaveSelectDisable (PORTA_OUT |= (1 << 7))
+
+#define timeout 60000
+
+// void SPI_0_send_array(uint8_t SPI_data[], uint8_t datasize);
+
 
 /************************************************************************/
 /* Initialization
@@ -23,30 +30,30 @@ SPIn.CTRLB.
 /************************************************************************/
 void SPI_0_init(void)
 {
-	
+	SlaveSelectDIR;
+	SlaveSelectDisable;
 	
 	PORTA.DIR |= PIN4_bm; // MOSI channel
 	PORTA.DIR &= ~PIN5_bm; // MISO channel
 	PORTA.DIR |= PIN6_bm; // SCK channel
-	PORTA.DIR |=PIN7_bm;
-	PORTA.OUTSET = PIN7_bm;
 	
-	SPI0.CTRLA |= (1 << 5);    // SPI Master mode selected, CLK_PER/4.
-	SPI0.CTRLA |= (1 << 0)|(1<<4);               // SPI enabled.
+	SPI0.CTRLA |= (1 << 5)|(1 << 4);    // SPI Master mode selected, CLK_PER/64, Clock double
+	SPI0.CTRLA |= (1 << 0);               // SPI enabled.
 	
-	
-	
-	
+	SlaveSelectDisable;
 }
 
-unsigned char SPI_0_send_char(unsigned char data)
+void SPI_0_send_char(uint8_t data)
 {
-
+	//SlaveSelectEnable;
 	
 	SPI0.DATA = data;
-	while (!(SPI0.INTFLAGS & (1 << 7))) ;          // flag is set when a serial transfer is complete.
-	return(SPI0.DATA);
-
+	while (!(SPI0.INTFLAGS & (1 << 7)))           // flag is set when a serial transfer is complete.
+	{
+		;
+	}
+	//SlaveSelectDisable;
+	//_delay_ms(1);
 }
 
 void SPI_0_send_string(char *str)
@@ -54,7 +61,21 @@ void SPI_0_send_string(char *str)
 	while(*str != '\0')
 	{
 		SPI_0_send_char(*str);
+		//USART1_sendChar(*str);
 		str++;
+	}
+}
+
+void SPI_0_send_array(uint8_t SPI_data[], uint8_t datasize)
+{
+	for(int i=0; i<datasize; i++)
+	{
+		SPI0.DATA = SPI_data[i];
+		while (!(SPI0.INTFLAGS & (1 << 7)))           // flag is set when a serial transfer is complete.
+		{
+			//USART1_sendString("wait");
+			//_delay_ms(1);
+		}
 	}
 }
 

@@ -2,6 +2,7 @@
 #define UART_1_AVR128DA64_H_
 
 #include <string.h>
+#include <math.h>
 
 #define USART1_BAUD_RATE(BAUD_RATE) ((float)(F_CPU * 64 / (16 * (float)BAUD_RATE)) + 0.5)
 
@@ -9,6 +10,8 @@ void USART1_init(uint16_t);
 void USART1_sendChar(char c);
 void USART1_sendString(char *str);
 char USART1_readChar(void);
+void USART1_sendString_without_newline(char *str);
+
 
 char buff[50];
 // Reverses a string 'str' of length 'len'
@@ -56,7 +59,7 @@ void ftoa(double n, char* res, int afterpoint)
 	float fpart = n - (float)ipart;
 	
 	// convert integer part to string
-	int i = intToStr(ipart, res, 0);
+	int i = intToStr(abs(ipart), res, 0);
 	
 	// check for display option after point
 	if (afterpoint != 0) {
@@ -67,7 +70,7 @@ void ftoa(double n, char* res, int afterpoint)
 		// is needed to handle cases like 233.007
 		fpart = fpart * pow(10, afterpoint);
 		
-		intToStr((int)fpart, res + i + 1, afterpoint);
+		intToStr(abs((int)fpart), res + i + 1, afterpoint);
 	}
 }
 
@@ -100,6 +103,13 @@ void USART1_sendString(char *str)
 	USART1_sendChar('\n');
 }
 
+void USART1_sendString_without_newline(char *str)
+{
+	for(size_t i = 0; i < strlen(str); i++)
+	{
+		USART1_sendChar(str[i]);
+	}
+}
 char USART1_readChar(void)
 {
 	while (!(USART1.STATUS & USART_RXCIF_bm))

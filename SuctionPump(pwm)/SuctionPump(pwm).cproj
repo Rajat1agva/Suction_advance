@@ -135,7 +135,13 @@
     <Compile Include="SPI_0_AVR128DA64.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="UART_1_AVR128DA64 %281%29.h">
+    <Compile Include="ST7586.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="ST7586.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="UART_1_AVR128DA64.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
