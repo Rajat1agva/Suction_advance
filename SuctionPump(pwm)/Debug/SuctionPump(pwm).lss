@@ -2797,7 +2797,7 @@ int main(void)
     30fc:	80 e5       	ldi	r24, 0x50	; 80
     30fe:	90 e0       	ldi	r25, 0x00	; 0
     3100:	0e 94 92 16 	call	0x2d24	; 0x2d24 <_print_icon>
-	_print_icon(250,70,48,mmhg_icon_24x48,24,48);
+	_print_icon(230,40,48,mmhg_icon_24x48,24,48);
     3104:	0f 2e       	mov	r0, r31
     3106:	f0 e3       	ldi	r31, 0x30	; 48
     3108:	ef 2e       	mov	r14, r31
@@ -2809,9 +2809,9 @@ int main(void)
     3114:	31 e0       	ldi	r19, 0x01	; 1
     3116:	40 e3       	ldi	r20, 0x30	; 48
     3118:	50 e0       	ldi	r21, 0x00	; 0
-    311a:	66 e4       	ldi	r22, 0x46	; 70
+    311a:	68 e2       	ldi	r22, 0x28	; 40
     311c:	70 e0       	ldi	r23, 0x00	; 0
-    311e:	8a ef       	ldi	r24, 0xFA	; 250
+    311e:	86 ee       	ldi	r24, 0xE6	; 230
     3120:	90 e0       	ldi	r25, 0x00	; 0
     3122:	0e 94 92 16 	call	0x2d24	; 0x2d24 <_print_icon>
 	//ST7586_fill(ST7586_COLOR_BLACK);
@@ -2823,7 +2823,7 @@ int main(void)
     312a:	76 01       	movw	r14, r12
 	ST7586_init(1);
 	_print_icon(80,10,32,battery_SOC4_15x32,15,32);
-	_print_icon(250,70,48,mmhg_icon_24x48,24,48);
+	_print_icon(230,40,48,mmhg_icon_24x48,24,48);
 	//ST7586_fill(ST7586_COLOR_BLACK);
 	while (1)
 	{   uint8_t i = 200;

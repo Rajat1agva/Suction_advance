@@ -42,7 +42,7 @@ int main(void)
 	SPI_0_init();
 	ST7586_init(1);
 	_print_icon(80,10,32,battery_SOC4_15x32,15,32);
-	_print_icon(250,70,48,mmhg_icon_24x48,24,48);
+	_print_icon(230,40,48,mmhg_icon_24x48,24,48);
 	//ST7586_fill(ST7586_COLOR_BLACK);
 	while (1)
 	{   uint8_t i = 200;
