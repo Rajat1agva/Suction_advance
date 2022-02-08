@@ -281,7 +281,7 @@ void ST7586_init(char monochrome)
 	ST7586_cmd(POWERSAVE | 1);			// Sleep out mode
 	ST7586_cmd(DISPLAYONOFF);			// Disply OFF
 	ST7586_cmd(SETVOP);					// Set Vop to 0x0F0
-	argsArray[0] = (uint8_t)(display_vop & 0x00FF); argsArray[1] = (uint8_t)(display_vop >> 8);
+	argsArray[0] = (uint8_t)(display_vop & 0x0F0); argsArray[1] = (uint8_t)(display_vop >> 8);
 	ST7586_data(argsArray,2);
 	ST7586_cmd(BIASSYSTEM);				// BIAS System Ratio 1/14
 	argsArray[0] = 0x05;
@@ -296,7 +296,7 @@ void ST7586_init(char monochrome)
 	argsArray[0] = 0;
 	ST7586_data(argsArray,1);
 	ST7586_cmd(NLINEINVERSION);			// Set N-Line Inversion ( 8B, dunno why)
-	argsArray[0] = 0x8B;
+	argsArray[0] = 0x80;
 	ST7586_data(argsArray,1);
 	ST7586_cmd(DISPLAYMODE | monochrome);	// Set Display mode to grayscale or monochrome, when "monochrome" is 1
 	ST7586_cmd(ENABLEDDRAMINTERFACE);	// Enable DDRAM interface

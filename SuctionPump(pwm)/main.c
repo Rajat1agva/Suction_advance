@@ -59,7 +59,7 @@ int main(void)
 	
 	int count = 0;
 	count = ADC0_read(channel_1);
-	
+	USART1_sendInt(count);
 	dutyCycle1 = 0.3663004*count + 1500;
 	TCA0.SINGLE.CMP0 = dutyCycle1;
 	show_mmgh_3digit(150,80);	
@@ -167,6 +167,7 @@ void show_mmgh_3digit (int x, int y)
 	int buff =(int)final_pressure;
 	uint8_t digit = 0, digit_a = 0, digit_b = 0, digit_c = 0;
 	if (buff > 999)
+	
 	{
 		USART1_sendString("pressure digit overflow!!");
 		final_pressure = 0;
