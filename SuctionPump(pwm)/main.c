@@ -33,6 +33,7 @@ void ST7586_send_data(uint8_t data[], uint8_t dataSize);
 
 int main(void)
 {   _PROTECTED_WRITE (CLKCTRL.OSCHFCTRLA, ((CLKCTRL_FREQSEL_24M_gc)|(CLKCTRL_AUTOTUNE_bm)));			//To increase clock freq
+	_delay_ms(100);
 	PORTB_DIR |= (1<<4);  // data/cmd
 	PORTC_DIR |= (1<<5); //Reset pin
 	TCA0_PWM_init();
